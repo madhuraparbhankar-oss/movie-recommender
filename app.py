@@ -1,23 +1,27 @@
 import streamlit as st
 import pickle
-import requests
+import os
+import gdown
 
 st.set_page_config(page_title="Netflix AI", layout="wide")
 
-# 🔥 LOAD DATA FROM GOOGLE DRIVE (FIXED)
-@st.cache_data
-def load_pickle(file_id):
-    url = f"https://drive.google.com/uc?export=download&id={file_id}"
-    response = requests.get(url)
-    return pickle.loads(response.content)
+# 🔥 LOAD DATA FROM GOOGLE DRIVE OR LOCAL
+@st.cache_resource
+def load_pickle(file_path, file_id):
+    # Streamlit Cloud might check out small Git LFS pointer files instead of the actual data
+    if not os.path.exists(file_path) or os.path.getsize(file_path) < 10000:
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, file_path, quiet=False)
+    with open(file_path, 'rb') as f:
+        return pickle.load(f)
 
 # 👉 PUT YOUR FILE IDs HERE
-MOVIES_ID = "YOUR_MOVIES_FILE_ID"
-SIMILARITY_ID = "YOUR_SIMILARITY_FILE_ID"
+MOVIES_ID = "14fBRVtQNF_RVWQ3eBX4_8TXh_W1cL61M"
+SIMILARITY_ID = "17q9sI0nyvAfABzUCJPhWxeuYrJaEwTsW"
 
 with st.spinner("Loading data... please wait ⏳"):
-    movies = load_pickle(MOVIES_ID)
-    similarity = load_pickle(SIMILARITY_ID)
+    movies = load_pickle("movies.pkl", MOVIES_ID)
+    similarity = load_pickle("similarity.pkl", SIMILARITY_ID)
 
 # 🎬 Poster (placeholder)
 def fetch_poster(movie_title):
