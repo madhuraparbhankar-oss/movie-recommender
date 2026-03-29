@@ -216,10 +216,10 @@ body, .stApp {
 
 # 🌌 SIDEBAR
 with st.sidebar:
-    st.markdown("<h2 style='font-family: Orbitron; color: #4facfe;'>SYSTEM SETTINGS</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-family: Orbitron; color: #000000;'>SYSTEM SETTINGS</h2>", unsafe_allow_html=True)
     num_recommendations = st.slider("Target Matches", min_value=3, max_value=10, value=5)
     st.markdown("---")
-    st.markdown("Powered by Neural Cosine Similarity Vectors. Built for the future of cinema. 🍿")
+    st.markdown("<div style='color: #333333; font-weight: 600; padding-top: 20px;'>Powered by Neural Cosine Similarity Vectors. Built for the future of cinema. 🍿</div>", unsafe_allow_html=True)
 
 # 🎬 HEADER
 st.markdown("<div class='header'>CINEMATIQ AI</div>", unsafe_allow_html=True)
