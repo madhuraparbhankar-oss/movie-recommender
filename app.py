@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import os
 import gdown
+import requests
 
 st.set_page_config(page_title="Netflix AI", layout="wide")
 
@@ -24,8 +25,29 @@ with st.spinner("Loading data... ⏳"):
     movies = load_pickle("movies.pkl", MOVIES_ID)
     similarity = load_pickle("similarity.pkl", SIMILARITY_ID)
 
-# 🎬 Placeholder Posters (NO API)
-def fetch_poster(movie_title):
+import urllib.parse
+
+# 🎬 Poster Fetching (NO API KEY REQUIRED! 🚀)
+def fetch_poster(movie_id, movie_title):
+    try:
+        # We use IMDB's internal suggestion API to get high-res posters for free!
+        clean_title = urllib.parse.quote(movie_title.lower())
+        first_letter = clean_title[0] if clean_title else 'a'
+        url = f"https://v2.sg.media-imdb.com/suggestion/{first_letter}/{clean_title}.json"
+        
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers, timeout=5)
+        data = response.json()
+        
+        # Grab the poster ('imageUrl') from the first search result ('d')
+        if "d" in data and len(data["d"]) > 0:
+            poster_url = data["d"][0].get("i", {}).get("imageUrl")
+            if poster_url:
+                return poster_url
+    except Exception as e:
+        pass
+        
+    # Fallback to dummy image layout
     return f"https://placehold.co/300x450/1c1c1c/FFF?text={movie_title.replace(' ', '+')}"
 
 # 🎯 Recommendation Function
@@ -42,9 +64,10 @@ def recommend(movie):
     names, posters = [], []
 
     for i in movie_list:
+        movie_id = movies.iloc[i[0]].id
         title = movies.iloc[i[0]].title
         names.append(title)
-        posters.append(fetch_poster(title))
+        posters.append(fetch_poster(movie_id, title))
 
     return names, posters
 
