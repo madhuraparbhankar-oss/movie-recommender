@@ -7,7 +7,7 @@ import urllib.parse
 
 st.set_page_config(page_title="Cinematiq AI", layout="wide", page_icon="🌌")
 
-# 🔥 LOAD DATA
+# LOAD DATA
 @st.cache_resource
 def load_pickle(file_path, file_id):
     if not os.path.exists(file_path) or os.path.getsize(file_path) < 10000:
@@ -17,16 +17,16 @@ def load_pickle(file_path, file_id):
     with open(file_path, "rb") as f:
         return pickle.load(f)
 
-# 👉 YOUR FILE IDs
+# file ids
 MOVIES_ID = "14fBRVtQNF_RVWQ3eBX4_8TXh_W1cL61M"
 SIMILARITY_ID = "17q9sI0nyvAfABzUCJPhWxeuYrJaEwTsW"
 
-# ⏳ Load Data
+#  Load Data
 with st.spinner("Initializing Neural Network... 🌌"):
     movies = load_pickle("movies.pkl", MOVIES_ID)
     similarity = load_pickle("similarity.pkl", SIMILARITY_ID)
 
-# 🎬 Movie Details Fetching (IMDB API)
+# Movie Details Fetching (IMDB API)
 @st.cache_data
 def fetch_movie_details(movie_title):
     try:
@@ -53,7 +53,7 @@ def fetch_movie_details(movie_title):
     fallback = f"https://placehold.co/300x450/1c1c1c/FFF?text={movie_title.replace(' ', '+')}"
     return fallback, "Unknown", "Unknown", ""
 
-# 🎯 Recommendation Function
+# Recommendation Function
 def recommend(movie, top_n=5):
     index = movies[movies['title'] == movie].index[0]
     distances = similarity[index]
@@ -79,7 +79,7 @@ def recommend(movie, top_n=5):
 
     return recommendations
 
-# 🎨 FUTURISTIC CYBERPUNK UI
+# FUTURISTIC CYBERPUNK UI
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap');
@@ -214,25 +214,25 @@ body, .stApp {
 </style>
 """, unsafe_allow_html=True)
 
-# 🌌 SIDEBAR
+# SIDEBAR
 with st.sidebar:
     st.markdown("<h2 style='font-family: Orbitron; color: #000000;'>SYSTEM SETTINGS</h2>", unsafe_allow_html=True)
     num_recommendations = st.slider("Target Matches", min_value=3, max_value=10, value=5)
     st.markdown("---")
     st.markdown("<div style='color: #333333; font-weight: 600; padding-top: 20px;'>Powered by Neural Cosine Similarity Vectors. Built for the future of cinema. 🍿</div>", unsafe_allow_html=True)
 
-# 🎬 HEADER
+#  HEADER
 st.markdown("<div class='header'>CINEMATIQ AI</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>V2.0 Quantum Engine</div>", unsafe_allow_html=True)
 
-# 🔍 CENTERED SEARCH
+# CENTERED SEARCH
 col1, col2, col3 = st.columns([1,3,1])
 
 with col2:
     selected_movie = st.selectbox("INITIALIZE TARGET MODULE", movies['title'].values)
     clicked = st.button("🚀 INITIATE SCAN")
 
-# 🎬 RESULTS
+# RESULTS
 if clicked:
     st.markdown("<hr style='border: 1px solid rgba(79, 172, 254, 0.3); margin: 30px 0;'>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align: center; font-family: Orbitron; color: white; text-shadow: 0 0 10px #f093fb;'>🔥 OPTIMAL SYSTEM MATCHES</h2>", unsafe_allow_html=True)
